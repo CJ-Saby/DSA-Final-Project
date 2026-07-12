@@ -2,14 +2,18 @@
 
 class list {
     private:
-        struct NodeSingly {
-            std::string taskName, taskDesc;
-            int priority; // ranging from 1 to 10
-            int dateMade[3], dateCompleted[3]; // 0 = Day, 1 = Month, 2 = Year
+        struct NodeSingly { //singly linked list
+            std::string product_name, product_type, product_ID;
+            int quantity;
+            double unit_cost;
+            NodeSingly *next;
         };
         NodeSingly *head = nullptr;
     public:
-};
+}
+
+
+
 
 
 int main() {
