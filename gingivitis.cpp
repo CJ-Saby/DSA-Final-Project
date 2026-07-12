@@ -11,3 +11,13 @@ class list {
         NodeSingly *head = nullptr;
     public:
 }
+
+
+
+
+
+int main() {
+
+
+    return 0;
+}
