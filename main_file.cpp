@@ -3,12 +3,13 @@
 class list {
     private:
 
-        struct NodeSingly { // task node blueprint
-            std::string taskName, taskDesc;
-            int priority; // ranging from 1 to 10 with 10 being the highest priority
+        struct patientCase { // task node blueprint
+            std::string patientName, caseDesc; // caseDesc is the description of the patient's case
+            int priority; // legend: 1 = non emergency, 2 = emergency, 3 = highly urgent emergency
             int dateMade[3], dateCompleted[3]; // legend of indices: 0 = Day, 1 = Month, 2 = Year
         };
-        NodeSingly *head = nullptr;
+        typedef patientCase* NodePtr;
+        patientCase *head = nullptr;
 
     public:
 
