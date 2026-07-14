@@ -13,6 +13,12 @@ class list {
 
     public:
 
+        void view_task_details (std::string patientName){
+
+            // WIP
+
+        }
+
         void add_task(std::string taskName, std::string taskDesc, int priority) {
             NodeSingly* newNode = new NodeSingly();
             newNode->taskName = taskName;
