@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cctype>
 #include <limits>
+#include <string>
 
 class list {
     private:
@@ -9,8 +10,9 @@ class list {
             std::string patientName, caseDesc; // caseDesc is the description of the patient's case
             std::string patientID; // contains a unique identifier for the patient case
             int priority; // legend: 1 = non emergency, 2 = emergency, 3 = highly urgent emergency
-            int dateMade[3], dateCompleted[3]; // legend of indices: 0 = Day, 1 = Month, 2 = Year
+            int dateMade[3], dateDischarged[3]; // legend of indices: 0 = Day, 1 = Month, 2 = Year
             patientCase* next, *prev;
+            bool discharged = false;
         };
         
         struct searchResults {
@@ -28,7 +30,9 @@ class list {
         }
         
         typedef patientCase* NodePtr;
-        patientCase *head = nullptr;
+        NodePtr front = nullptr;
+        NodePtr rear = nullptr;
+        int numItems = 0;
 
     public:
 
@@ -38,20 +42,24 @@ class list {
 
         }
         
-        void update_task() {
+        void update_node() {
             NodePtr current;
+        }
+        
+        void remove_node() {
+            std::cout << "FUCK YOU!";
         }
         
         void search() { //searches all similar nodes
             std::string input;
-            NodePtr current = head;
-            searchResults *crest = nullptr, *conductor;
-            bool found = false;
-            int GotYa = 1;
+            NodePtr current = front;
+            searchResults *crest = nullptr, *conductor; //conductor will traverse like how a conductor moves between train carts, crest is the head/front of the list
+            int GotYa = 1; //just a counter if it got something
             
             while(true) { //input loop
                 std::cout << "Input patient name or ID: ";
                 std::getline(std::cin, input);
+                
                 if(input.length() == 0) {
                     std::cout << "You didn't input anything\n";
                     continue;
@@ -66,6 +74,7 @@ class list {
                         while(current != nullptr) { //searching and recording each found node
                             std::string lower_name = lowercase(current->patientName);
                             std::string lower_ID = lowercase(current->patientID);
+                            
                             if(lower_name.find(lower_input) != std::string::npos || lower_ID.find(lower_input) != std::string::npos) {
                                 if(GotYa == 1) {
                                     crest = new searchResults;
@@ -75,7 +84,6 @@ class list {
                                     conductor->next = nullptr;
                                     conductor->num = GotYa;
                                     GotYa++;
-                                    current->next;
                                 }
                                 else {
                                     conductor->next = new searchResults;
@@ -84,11 +92,16 @@ class list {
                                     conductor->next = nullptr;
                                     conductor->num = GotYa;
                                     GotYa++;
-                                    current->next;
                                 }
                             }
                             current = current->next;
                         }
+                        
+                        if(crest == nullptr) {
+                            std::cout << "No matches found\n";
+                            break;
+                        }
+                        
                         conductor = crest;
                         while(conductor != nullptr) { //displaying the found nodes
                             std::cout << "[" << conductor->num << "]\n";
@@ -96,8 +109,9 @@ class list {
                             std::cout << "ID: " << conductor->foundNode->patientID << std::endl;
                             conductor = conductor->next;
                         }
+                        
+                        int selection;
                         while(true) {
-                            int selection;
                             std::cout << "\nEnter a Number: ";
                             std::cin >> selection;
                             if(std::cin.fail() || selection >= GotYa) {
@@ -111,7 +125,11 @@ class list {
                                 break;
                             }
                         }
-                        while(conductor->num != selection)
+                        while(conductor != nullptr) {
+                            if(conductor->num == selection) {
+                                
+                            }
+                        }
                     }
                 }
             }
