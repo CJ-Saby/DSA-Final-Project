@@ -21,8 +21,9 @@ private:
     NodePtr rear = nullptr;
 
     int numItems = 0;
+   
 
-    int currentDate[3] = {16, 7, 2026}; // starting simulation date: 16/07/2026 (tentative)
+public:
 
     bool is_leap_year(int year) { // for leap year calculation lang
         if (year % 400 == 0) {
@@ -57,7 +58,6 @@ private:
         return 31;
     }
 
-public:
 
      void show_current_day() { // added this just in case
         std::cout << "Current simulated date: "
@@ -179,6 +179,8 @@ public:
 };
 
 int main() {
+
+     int currentDate[3] = {16, 7, 2026}; // starting simulation date: 16/07/2026 (tentative)
 
     return 0;
 }
