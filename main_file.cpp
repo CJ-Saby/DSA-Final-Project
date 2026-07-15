@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cctype>
+#include <limits>
 
 class list {
     private:
@@ -74,6 +75,7 @@ class list {
                                     conductor->next = nullptr;
                                     conductor->num = GotYa;
                                     GotYa++;
+                                    current->next;
                                 }
                                 else {
                                     conductor->next = new searchResults;
@@ -82,16 +84,34 @@ class list {
                                     conductor->next = nullptr;
                                     conductor->num = GotYa;
                                     GotYa++;
+                                    current->next;
                                 }
                             }
                             current = current->next;
                         }
+                        conductor = crest;
                         while(conductor != nullptr) { //displaying the found nodes
-                            conductor = crest;
                             std::cout << "[" << conductor->num << "]\n";
                             std::cout << "Name: " << conductor->foundNode->patientName << std::endl;
                             std::cout << "ID: " << conductor->foundNode->patientID << std::endl;
+                            conductor = conductor->next;
                         }
+                        while(true) {
+                            int selection;
+                            std::cout << "\nEnter a Number: ";
+                            std::cin >> selection;
+                            if(std::cin.fail() || selection >= GotYa) {
+                                std::cout << "Invalid Input!\n";
+                                std::cin.clear();
+                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                continue;
+                            }
+                            else {
+                                conductor = crest;
+                                break;
+                            }
+                        }
+                        while(conductor->num != selection)
                     }
                 }
             }
