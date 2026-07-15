@@ -140,9 +140,6 @@ public:
 
     void mark_patient_as_discharged(
         const std::string& patientName,
-        int day,
-        int month,
-        int year
     ) {
 
         NodePtr traverse = front;
