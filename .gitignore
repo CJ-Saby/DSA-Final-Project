@@ -1,0 +1,22 @@
+# Build artifacts
+*.o
+*.out
+main
+*.exe
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Debug files
+*.dSYM/
+*.su
+*.gch
+*.pcm
+
+# Dependencies
+*.d

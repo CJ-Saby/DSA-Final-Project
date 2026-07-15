@@ -8,8 +8,9 @@ class Queue { // uses doubly linked list
             std::string patientName, caseDesc; // caseDesc is the description of the patient's case
             std::string patientID; // contains a unique identifier for the patient case
             int priority; // legend: 1 = non emergency, 2 = emergency, 3 = highly urgent emergency
-            int dateMade[3], dateCompleted[3]; // legend of indices: 0 = Day, 1 = Month, 2 = Year
+            int dateMade[3], dateDischarged[3]; // legend of indices: 0 = Day, 1 = Month, 2 = Year
             patientCase* next, *prev;
+            bool discharged = false;
         };
 
         typedef patientCase* NodePtr;
@@ -95,12 +96,11 @@ class Queue { // uses doubly linked list
             }
 
         }
-
 };
-
 
 int main() {
 
+    int currentDate[3] = {16, 7, 2026}; // starting simulation date: 16/07/2026 (tentative)
 
     return 0;
 }
