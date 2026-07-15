@@ -6,6 +6,7 @@ class Queue {
 
         struct patientCase { // task node blueprint
             std::string patientName, caseDesc; // caseDesc is the description of the patient's case
+            std::string patientID; // contains a unique identifier for the patient case
             int priority; // legend: 1 = non emergency, 2 = emergency, 3 = highly urgent emergency
             int dateMade[3], dateCompleted[3]; // legend of indices: 0 = Day, 1 = Month, 2 = Year
             patientCase* next;
@@ -23,9 +24,9 @@ class Queue {
             std::cout << "test";
         }
 
-        void add_task() {
+        void add_record() {
             // initialize variables
-            std::string name, desc;
+            std::string name, desc, id;
             int level;
 
             // ask the user for inputs
