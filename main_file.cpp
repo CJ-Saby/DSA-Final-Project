@@ -66,70 +66,70 @@ class list {
                 }
                 else {
                     std::string lower_input = lowercase(input);
-                    if(current == nullptr) {
-                        std::cout << "The Queue is Empty\n";
-                        break;
+                    break;
+                }
+            }
+            
+            if(current == nullptr) {
+                std::cout << "The Queue is Empty\n";
+            }
+            else {
+                while(current != nullptr) { //searching and recording each found node
+                    std::string lower_name = lowercase(current->patientName);
+                    std::string lower_ID = lowercase(current->patientID);
+                            
+                    if(lower_name.find(lower_input) != std::string::npos || lower_ID.find(lower_input) != std::string::npos) {
+                        if(GotYa == 1) {
+                            crest = new searchResults;
+                            conductor = crest;
+                            conductor->foundNode = current;
+                            conductor->prev = nullptr;
+                            conductor->next = nullptr;
+                            conductor->num = GotYa;
+                            GotYa++;
+                        }
+                        else {
+                            conductor->next = new searchResults;
+                            conductor->next->prev = conductor;
+                            conductor = conductor->next;
+                            conductor->next = nullptr;
+                            conductor->num = GotYa;
+                            GotYa++;
+                        }
+                    }
+                    current = current->next;
+                }
+                        
+            if(crest == nullptr) {
+                std::cout << "No matches found\n";
+            }
+            else {
+                conductor = crest;
+                while(conductor != nullptr) { //displaying the found nodes
+                    std::cout << "[" << conductor->num << "]\n";
+                    std::cout << "Name: " << conductor->foundNode->patientName << std::endl;
+                    std::cout << "ID: " << conductor->foundNode->patientID << std::endl;
+                    conductor = conductor->next;
+                }
+                
+                int selection;
+                while(true) {
+                    std::cout << "\nEnter a Number: ";
+                    std::cin >> selection;
+                    if(std::cin.fail() || selection >= GotYa) {
+                        std::cout << "Invalid Input!\n";
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        continue;
                     }
                     else {
-                        while(current != nullptr) { //searching and recording each found node
-                            std::string lower_name = lowercase(current->patientName);
-                            std::string lower_ID = lowercase(current->patientID);
-                            
-                            if(lower_name.find(lower_input) != std::string::npos || lower_ID.find(lower_input) != std::string::npos) {
-                                if(GotYa == 1) {
-                                    crest = new searchResults;
-                                    conductor = crest;
-                                    conductor->foundNode = current;
-                                    conductor->prev = nullptr;
-                                    conductor->next = nullptr;
-                                    conductor->num = GotYa;
-                                    GotYa++;
-                                }
-                                else {
-                                    conductor->next = new searchResults;
-                                    conductor->next->prev = conductor;
-                                    conductor = conductor->next;
-                                    conductor->next = nullptr;
-                                    conductor->num = GotYa;
-                                    GotYa++;
-                                }
-                            }
-                            current = current->next;
-                        }
-                        
-                        if(crest == nullptr) {
-                            std::cout << "No matches found\n";
-                            break;
-                        }
-                        
                         conductor = crest;
-                        while(conductor != nullptr) { //displaying the found nodes
-                            std::cout << "[" << conductor->num << "]\n";
-                            std::cout << "Name: " << conductor->foundNode->patientName << std::endl;
-                            std::cout << "ID: " << conductor->foundNode->patientID << std::endl;
-                            conductor = conductor->next;
-                        }
-                        
-                        int selection;
-                        while(true) {
-                            std::cout << "\nEnter a Number: ";
-                            std::cin >> selection;
-                            if(std::cin.fail() || selection >= GotYa) {
-                                std::cout << "Invalid Input!\n";
-                                std::cin.clear();
-                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                                continue;
-                            }
-                            else {
-                                conductor = crest;
-                                break;
-                            }
-                        }
-                        while(conductor != nullptr) {
-                            if(conductor->num == selection) {
+                        break;
+                    }
+                }
+                while(conductor != nullptr) {
+                    if(conductor->num == selection) {
                                 
-                            }
-                        }
                     }
                 }
             }
