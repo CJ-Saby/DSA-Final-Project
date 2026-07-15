@@ -1,5 +1,7 @@
 #include <iostream>
 #include <limits>
+#include <string>
+#include <random>
 
 class Queue { // uses doubly linked list
     private:
@@ -21,155 +23,163 @@ class Queue { // uses doubly linked list
     
     public:
 
+        std::string id_random() {
+            const std::string possibleChar = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            std::string id = "";
+            for (int i = 0; i < 6; i++) {
+                id += possibleChar[rand() % 62];
+            }
+            return id;
+        }
+
         bool is_leap_year(int year) { // for leap year calculation lang
-        if (year % 400 == 0) {
-            return true;
-        }
-
-        if (year % 100 == 0) {
-            return false;
-        }
-
-        return year % 4 == 0;
-    }
-
-    int days_in_month(int month, int year) {
-
-        if (month == 2) {
-            if (is_leap_year(year)) {
-                return 29;
+            if (year % 400 == 0) {
+                return true;
             }
 
-            return 28;
+            if (year % 100 == 0) {
+                return false;
+            }
+
+            return year % 4 == 0;
         }
 
-        if (month == 4 ||
-            month == 6 ||
-            month == 9 ||
-            month == 11) {
+        int days_in_month(int month, int year) {
 
-            return 30;
-        }
-
-        return 31;
-    }
-
-
-     void show_current_day() { // added this just in case
-        std::cout << "Current simulated date: "
-                  << currentDate[0] << "/"
-                  << currentDate[1] << "/"
-                  << currentDate[2] << '\n';
-    }
-
-    void move_one_day() {
-
-        currentDate[0]++;
-
-        int maximumDays = days_in_month(
-            currentDate[1],
-            currentDate[2]
-        );
-
-        if (currentDate[0] > maximumDays) {
-            currentDate[0] = 1;
-            currentDate[1]++;
-        }
-
-        if (currentDate[1] > 12) {
-            currentDate[1] = 1;
-            currentDate[2]++;
-        }
-
-        std::cout << "Moved to the next day.\n";
-        show_current_day();
-    }
-
-    void view_patient_details(const std::string& patientName) {
-
-        NodePtr traverse = front;
-
-        while (traverse != nullptr) {
-
-            if (traverse->patientName == patientName) {
-
-                std::cout << "\n--- Patient Details ---\n";
-
-                std::cout << "Patient Name: "
-                          << traverse->patientName << '\n';
-
-                std::cout << "Patient ID: "
-                          << traverse->patientID << '\n';
-
-                std::cout << "Case Description: "
-                          << traverse->caseDesc << '\n';
-
-                std::cout << "Priority: "
-                          << traverse->priority << '\n';
-
-                std::cout << "Date Admitted: "
-                          << traverse->dateMade[0] << "/"
-                          << traverse->dateMade[1] << "/"
-                          << traverse->dateMade[2] << '\n';
-
-                if (traverse->discharged) {
-
-                    std::cout << "Status: Discharged\n";
-
-                    std::cout << "Date Discharged: "
-                              << traverse->dateDischarged[0] << "/"
-                              << traverse->dateDischarged[1] << "/"
-                              << traverse->dateDischarged[2] << '\n';
-
-                } else {
-                    std::cout << "Status: Not Discharged\n";
+            if (month == 2) {
+                if (is_leap_year(year)) {
+                    return 29;
                 }
 
-                return;
+                return 28;
             }
 
-            traverse = traverse->next;
+            if (month == 4 ||
+                month == 6 ||
+                month == 9 ||
+                month == 11) {
+
+                return 30;
+            }
+
+            return 31;
         }
 
-        std::cout << "Patient not found.\n";
-    }
 
-    void mark_patient_as_discharged(
-        const std::string& patientName,
-    ) {
+        void show_current_day(int currDate[]) { // added this just in case
+            std::cout << "Current simulated date: "
+                    << currDate[0] << "/"
+                    << currDate[1] << "/"
+                    << currDate[2] << '\n';
+        }
 
-        NodePtr traverse = front;
+        void move_one_day(int currDate[]) {
 
-        while (traverse != nullptr) {
+            currDate[0]++;
 
-            if (traverse->patientName == patientName) {
+            int maximumDays = days_in_month(
+                currDate[1],
+                currDate[2]
+            );
 
-                if (traverse->discharged) {
+            if (currDate[0] > maximumDays) {
+                currDate[0] = 1;
+                currDate[1]++;
+            }
 
-                    std::cout
-                        << "This patient has already been discharged.\n";
+            if (currDate[1] > 12) {
+                currDate[1] = 1;
+                currDate[2]++;
+            }
+
+            std::cout << "Moved to the next day.\n";
+            show_current_day(currDate);
+        }
+
+        void view_patient_details(const std::string& id) {
+
+            NodePtr traverse = front;
+
+            while (traverse != nullptr) {
+
+                if (traverse->patientID == id) {
+
+                    std::cout << "\n--- Patient Details ---\n";
+
+                    std::cout << "Patient Name: "
+                            << traverse->patientName << '\n';
+
+                    std::cout << "Patient ID: "
+                            << traverse->patientID << '\n';
+
+                    std::cout << "Case Description: "
+                            << traverse->caseDesc << '\n';
+
+                    std::cout << "Priority: "
+                            << traverse->priority << '\n';
+
+                    std::cout << "Date Admitted: "
+                            << traverse->dateMade[0] << "/"
+                            << traverse->dateMade[1] << "/"
+                            << traverse->dateMade[2] << '\n';
+
+                    if (traverse->discharged) {
+
+                        std::cout << "Status: Discharged\n";
+
+                        std::cout << "Date Discharged: "
+                                << traverse->dateDischarged[0] << "/"
+                                << traverse->dateDischarged[1] << "/"
+                                << traverse->dateDischarged[2] << '\n';
+
+                    } else {
+                        std::cout << "Status: Not Discharged\n";
+                    }
 
                     return;
                 }
 
-                traverse->discharged = true;
-
-                traverse->dateDischarged[0] = currentDate[0];
-                traverse->dateDischarged[1] = currentDate[1];
-                traverse->dateDischarged[2] = currentDate[2];
-
-                std::cout
-                    << "Patient marked as discharged.\n";
-
-                return;
+                traverse = traverse->next;
             }
 
-            traverse = traverse->next;
+            std::cout << "Patient not found.\n";
         }
 
-        std::cout << "Patient not found.\n";
-    
-    };
+        void mark_patient_as_discharged(const std::string& id, int currDate[]) {
+
+            NodePtr traverse = front;
+
+            while (traverse != nullptr) {
+
+                if (traverse->patientID == id) {
+
+                    if (traverse->discharged) {
+
+                        std::cout
+                            << "This patient has already been discharged.\n";
+
+                        return;
+                    }
+
+                    traverse->discharged = true;
+
+                    traverse->dateDischarged[0] = currDate[0];
+                    traverse->dateDischarged[1] = currDate[1];
+                    traverse->dateDischarged[2] = currDate[2];
+
+                    std::cout
+                        << "Patient marked as discharged.\n";
+
+                    return;
+                }
+
+                traverse = traverse->next;
+            }
+
+            std::cout << "Patient not found.\n";
+        
+        }
+
         void sort_node_in_queue(NodePtr caseNode) { 
             if (caseNode->prev == nullptr) { // is a check in case the case node is at the front
                 return;
@@ -197,7 +207,7 @@ class Queue { // uses doubly linked list
             } 
         }
 
-        void add_record() {
+        void add_record() { // PUT A DATE INPUT FEATURE
             // initialize variables
             std::string name, desc, id;
             int level;
