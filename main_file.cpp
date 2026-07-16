@@ -35,19 +35,37 @@ class list {
         int numItems = 0;
 
     public:
-
-        void view_task_details (std::string patientName){
-
-            // WIP
-
-        }
         
-        void update_node() {
+        void update_node(searchResults *point) {
             NodePtr current;
+            current = point->foundNode;
         }
         
-        void remove_node() {
-            std::cout << "FUCK YOU!";
+        void remove_node(searchResults *point) {
+            NodePtr current = point->foundNode;
+            if(current->prev == nullptr && current->next == nullptr) {
+                delete current;
+                front = nullptr;
+                numItems--;
+            }
+            else if(current->prev != nullptr && current->next == nullptr) {
+                front = front->next;
+                delete current;
+                numItems--;
+            }
+            else if(current->prev == nullptr && current->next != nullptr) {
+                current = current->next;
+                delete current->prev;
+                current->prev = nullptr;
+                front = current;
+                numItems--;
+            }
+            else {
+                current->next->prev = current->prev;
+                current->prev->next = current->next;
+                delete current;
+                numItems--;
+            }
         }
         
         void search() { //searches all similar nodes
@@ -100,17 +118,17 @@ class list {
                     current = current->next;
                 }
                         
-            if(crest == nullptr) {
-                std::cout << "No matches found\n";
-            }
-            else {
-                conductor = crest;
-                while(conductor != nullptr) { //displaying the found nodes
-                    std::cout << "[" << conductor->num << "]\n";
-                    std::cout << "Name: " << conductor->foundNode->patientName << std::endl;
-                    std::cout << "ID: " << conductor->foundNode->patientID << std::endl;
-                    conductor = conductor->next;
+                if(crest == nullptr) {
+                    std::cout << "No matches found\n";
                 }
+                else {
+                    conductor = crest;
+                    while(conductor != nullptr) { //displaying the found nodes
+                        std::cout << "[" << conductor->num << "]\n";
+                        std::cout << "Name: " << conductor->foundNode->patientName << std::endl;
+                        std::cout << "ID: " << conductor->foundNode->patientID << std::endl;
+                        conductor = conductor->next;
+                    }
                 
                 int selection;
                 while(true) {
@@ -127,9 +145,38 @@ class list {
                         break;
                     }
                 }
+                int choice;
                 while(conductor != nullptr) {
                     if(conductor->num == selection) {
-                                
+                        while(true) {
+                            std::cout << "\n[1] Edit\n[2] Delete\n[3] Exit\nInput: ";
+                            std::cin >> choice;
+                            if(std::cin.fail()) {
+                                std::cout << "Invalid Input!\n";
+                                std::cin.clear();
+                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                continue;
+                            }
+                            else if(choice < 1 || choice > 3) {
+                                std::cout << "Invalid Input!\n";
+                                continue;
+                            }
+                            else break;
+                        }
+                        
+                        if(choice == 1) {
+                            update_node(conductor);
+                        }
+                        else if(choice == 2) {
+                            remove_node(conductor);
+                            std::cout << "Node Deleted\n";
+                        }
+                        else if(choice == 3) {
+                            std::cout << "Returning\n";
+                        }
+                    }
+                    else {
+                        conductor = conductor->next;
                     }
                 }
             }
