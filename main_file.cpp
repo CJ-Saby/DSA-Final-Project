@@ -678,7 +678,7 @@ int main() {
     Queue Records;
     int choice;
     
-    Records.load_to_queue();
+	Records.load_to_queue();
     while(true) {
         std::cout << "===============================================\n";
         std::cout << "\t\tPatient Records\n";
@@ -707,8 +707,8 @@ int main() {
             switch(choice) {
                 case 1:
                     std::cout << "------------------ADD PATIENT------------------\n";
-                    Records.add_record();
-		            Records.save_to_records();
+					Records.add_record();
+					Records.save_to_records();
                     break;
                 case 2:
                     Records.view_all();
@@ -716,14 +716,14 @@ int main() {
                 case 3:
                     std::cout << "\n----------------SEARCH PATIENT----------------\n";
                     Records.search();
-		            Records.save_to_records();
+					Records.save_to_records();
                     break;
                 case 4:
                     Records.view_discharged_patients();
                     break;
                 case 5:
                     std::cout << "\nExiting clinic system. Goodbye!\n";
-		            Records.save_to_records();
+					Records.save_to_records();
                     return 0;
             }
         }
