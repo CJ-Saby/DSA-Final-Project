@@ -38,6 +38,10 @@ class Queue { // uses doubly linked list
         NodePtr front = nullptr;
         NodePtr rear = nullptr;
         int numItems = 0;
+
+        //Discharged Patients
+        NodePtr dischargedFront = nullptr;
+        NodePtr dischargedRear = nullptr;
     
     public:
         
