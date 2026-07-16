@@ -317,7 +317,7 @@ class Queue {
 
 int main() {
     Queue Clinic;
-    Clinic.simulate_test_cases();
+    //Clinic.simulate_test_cases(); //Remove this in final
 
     int choice;
 
