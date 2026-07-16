@@ -10,7 +10,7 @@ class Queue { // uses doubly linked list
             std::string patientName, caseDesc; // caseDesc is the description of the patient's case
             std::string patientID; // contains a unique identifier for the patient case
             int priority; // legend: 1 = non emergency, 2 = emergency, 3 = highly urgent emergency
-            int dateMade[3], dateDischarged[3]; // legend of indices: 0 = Day, 1 = Month, 2 = Year
+            int dateMade[3] = {0}, dateDischarged[3] = {0}; // initialize dates to 0 by default (legend of indices: 0 = Day, 1 = Month, 2 = Year)
             patientCase* next, *prev;
             bool discharged = false;
         };
@@ -22,6 +22,15 @@ class Queue { // uses doubly linked list
         int numItems = 0;
     
     public:
+
+        ~Queue() {
+            NodePtr current = front;
+            while (current != nullptr) {
+                NodePtr nextNode = current->next;
+                delete current;
+                current = nextNode;
+            }
+        }
 
         std::string id_random() {
             const std::string possibleChar = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -207,7 +216,7 @@ class Queue { // uses doubly linked list
             } 
         }
 
-        void add_record() { // PUT A DATE INPUT FEATURE
+        void add_record(int date[]) { 
             // initialize variables
             std::string name, desc, id;
             int level;
@@ -240,6 +249,10 @@ class Queue { // uses doubly linked list
             newNode->patientName = name;
             newNode->caseDesc = desc;
             newNode->priority = level;
+            newNode->dateMade[0] = date[0];
+            newNode->dateMade[1] = date[1];
+            newNode->dateMade[2] = date[2];
+            newNode->patientID = id_random();
             newNode->next = nullptr;
             newNode->prev = nullptr;
 
@@ -250,10 +263,9 @@ class Queue { // uses doubly linked list
                 newNode->prev = rear;
                 rear->next = newNode;
                 rear = newNode;
-                numItems++; // increments the total items count
                 sort_node_in_queue(newNode);
             }
-
+            numItems++; // increments the total items count
         }
 };
 
