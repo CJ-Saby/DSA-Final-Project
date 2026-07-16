@@ -448,6 +448,117 @@ class Queue { // uses doubly linked list
             }
             numItems++; // increments the total items count
         }
+
+        void view_all() {
+            if (front == nullptr) {
+                std::cout << "\n--- No patient records found. The queue is empty. ---\n";
+                return;
+            }
+
+            NodePtr temp = front;
+            int count = 1;
+            
+            std::cout << "\n\t\tCURRENT PATIENT QUEUE           \n\n"; 
+
+            while (temp != nullptr) {
+                std::cout <<"Position in Queue: " << count << "\n";
+                std::cout <<"Patient Name:      " << temp->patientName << "\n";
+            
+                // Shows the urgency of the patient is
+                std::cout <<"Priority Level:    "<<temp->priority<<"(";
+                if (temp->priority == 1) {
+                    std::cout << "Non-emergency";
+                } else if (temp->priority == 2) {
+                    std::cout << "Emergency";
+                } else if (temp->priority == 3) {
+                    std::cout << "Highly Urgent Emergency";
+                } 
+                std::cout << ")\n";
+
+                std::cout <<"Date Registered:   " 
+                          << temp->dateMade[0] << "/"   // Day
+                          << temp->dateMade[1] << "/"   // Month
+                          << temp->dateMade[2] << "\n"; // Year
+                
+                std::cout << "---------------------------------------------\n";
+                
+                temp = temp->next; // Move to the next patient in line
+                count++;
+            }
+            int choice;
+            std::cout << "1.View patient\n"; 
+            std::cout << "2.Back\n";
+            while (true) {
+            std::cout << "Enter choice: ";
+        
+            if (!(std::cin >> choice)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid choice. Try again.\n";
+                continue;
+            }
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            if (choice == 1){
+                int targetPos; // selecting the desired patient through its number in the list
+                std::cout << "Select patient no: " ;
+                        if (std::cin >> targetPos) {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        patient_position(targetPos);
+                    }
+                    break;
+
+            } else if (choice == 2){   
+                break;
+            } 
+                else {
+                std::cout << "Please select a valid option.\n";
+            }
+        }
+        }
+        void view_discharged_patients() {
+            if (dischargedFront == nullptr) {
+                std::cout << "\n--- No discharged patient history found. ---\n";
+                return;
+            }
+
+            NodePtr temp = dischargedFront;
+            int count = 1;
+
+             std::cout << "\n\t\tDISCHARGED PATIENTS           \n\n";
+
+            while (temp != nullptr) {
+                std::cout << "Discharged Record #" << count << "\n";
+                std::cout << "Patient Name:      " << temp->patientName << "\n";
+                std::cout << "Case Description:  " << temp->caseDesc << "\n";
+                std::cout << "Date Registered:   " 
+                          << temp->dateMade[0] << "/" << temp->dateMade[1] << "/" << temp->dateMade[2] << "\n";
+                std::cout << "Date Discharged:   " 
+                          << temp->dateDischarged[0] << "/" << temp->dateDischarged[1] << "/" << temp->dateDischarged[2] << "\n";
+                std::cout << "---------------------------------------------\n";
+
+                temp = temp->next;
+                count++;
+            }
+        }
+
+        void patient_position(int position) {
+            NodePtr temp = front;
+            int count = 1;
+
+            while (temp != nullptr && count < position) {
+                temp = temp->next;
+                count++;
+            }
+
+            if (temp == nullptr || position < 1) {
+                std::cout << "\nError: Invalid position choice.\n";
+                return;
+            }
+
+            // Print deep details
+            view_patient_details(temp->patientName);
+        }
 };
 
 int main() {
