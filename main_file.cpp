@@ -36,10 +36,6 @@ class Queue { // uses doubly linked list
         NodePtr rear = nullptr;
         int numItems = 0;
 
-        //Discharged Patients
-        NodePtr dischargedFront = nullptr;
-        NodePtr dischargedRear = nullptr;
-    
     public:
         
         void update_node(searchResults *point) {
@@ -346,38 +342,58 @@ class Queue { // uses doubly linked list
         }
 
         void mark_patient_as_discharged(const std::string& id, int currDate[]) {
-
             NodePtr traverse = front;
 
             while (traverse != nullptr) {
 
                 if (traverse->patientID == id) {
-
-                    if (traverse->discharged) {
-
-                        std::cout
-                            << "This patient has already been discharged.\n";
-
+                    
+                    //open the file in append mode (creates it if it doesn't exist)
+                    std::ofstream outFile("discharged_history.txt", std::ios::app);
+                    if (!outFile){                        
+                    std::cout << "Error: Could not open file to save record.\n";
                         return;
                     }
 
-                    traverse->discharged = true;
+                    //writes the patient's deets into the file
+                    outFile << "Patient Name: " << traverse->patientName << "\n"
+                            << "ID: " << traverse->patientID << "\n"
+                            << "Case: " << traverse->caseDesc << "\n"
+                            << "Date Admitted: " << traverse->dateMade[0] << "/" 
+                                                << traverse->dateMade[1] << "/" 
+                                                << traverse->dateMade[2] << "\n"
+                            << "Date Discharged: " << currDate[0] << "/" 
+                                                << currDate[1] << "/" 
+                                                << currDate[2] << "\n"
+                            << "---------------------------------------------\n";
+                    
+                    outFile.close();
+                    std::cout << traverse->patientName << " has been discharged and saved to file.\n";
 
-                    traverse->dateDischarged[0] = currDate[0];
-                    traverse->dateDischarged[1] = currDate[1];
-                    traverse->dateDischarged[2] = currDate[2];
-
-                    std::cout
-                        << "Patient marked as discharged.\n";
+                    // Removes the Patient in the Queue
+                    if (traverse->prev == nullptr && traverse->next == nullptr) {
+                        front = nullptr;
+                        rear = nullptr;
+                    } else if (traverse->prev == nullptr) { // Delete front
+                        front = traverse->next;
+                        front->prev = nullptr;
+                    } else if (traverse->next == nullptr) { // Delete rear
+                        rear = traverse->prev;
+                        rear->next = nullptr;
+                    } else { // Delete in middle
+                        traverse->prev->next = traverse->next;
+                        traverse->next->prev = traverse->prev;
+                    }
+                    
+                    delete traverse;
+                    numItems--;
 
                     return;
                 }
-
                 traverse = traverse->next;
             }
 
             std::cout << "Patient not found.\n";
-        
         }
 
         void sort_node_in_queue(NodePtr caseNode) { 
@@ -526,30 +542,24 @@ class Queue { // uses doubly linked list
             }
         }
         }
-        void view_discharged_patients() {
-            if (dischargedFront == nullptr) {
-                std::cout << "\n--- No discharged patient history found. ---\n";
+       void view_discharged_patients() {
+            std::ifstream inFile("discharged_history.txt");
+            
+            // If no files yet, then nobody has been discharged
+            if (!inFile) {
+                std::cout << "\n--- No discharged patient history found yet. ---\n";
                 return;
             }
 
-            NodePtr temp = dischargedFront;
-            int count = 1;
-
-             std::cout << "\n\t\tDISCHARGED PATIENTS           \n\n";
-
-            while (temp != nullptr) {
-                std::cout << "Discharged Record #" << count << "\n";
-                std::cout << "Patient Name:      " << temp->patientName << "\n";
-                std::cout << "Case Description:  " << temp->caseDesc << "\n";
-                std::cout << "Date Registered:   " 
-                          << temp->dateMade[0] << "/" << temp->dateMade[1] << "/" << temp->dateMade[2] << "\n";
-                std::cout << "Date Discharged:   " 
-                          << temp->dateDischarged[0] << "/" << temp->dateDischarged[1] << "/" << temp->dateDischarged[2] << "\n";
-                std::cout << "---------------------------------------------\n";
-
-                temp = temp->next;
-                count++;
+            std::cout << "\n\t\tDISCHARGED PATIENTS HISTORY\n\n";
+            
+            std::string line;
+            // Read the file line by line and print it out
+            while (std::getline(inFile, line)) {
+                std::cout << line << '\n';
             }
+            
+            inFile.close();
         }
 
         void patient_position(int position) {
@@ -566,8 +576,7 @@ class Queue { // uses doubly linked list
                 return;
             }
 
-            // Print deep details
-            view_patient_details(temp->patientName);
+            view_patient_details(temp->patientID);
         }
 };
 
