@@ -730,7 +730,7 @@ int main() {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
         }
-        else if(choice > 5 || choice < 1) {
+        else if(choice > 6 || choice < 1) {
             std::cout << "Invalid Input!\n";
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -766,6 +766,7 @@ int main() {
 				case 6:
 					std::cout << "\nExiting clinic system. Goodbye!\n";
 					Records.save_to_records();
+					std::exit(1);
                     return 0;
             }
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
