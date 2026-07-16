@@ -3,6 +3,7 @@
 #include <limits>
 #include <string>
 #include <random>
+#include <cstdlib>
 
 class Queue { // uses doubly linked list
     private:
@@ -31,10 +32,6 @@ class Queue { // uses doubly linked list
         }
         
         typedef patientCase* NodePtr;
-        NodePtr front = nullptr;
-        NodePtr rear = nullptr;
-        int numItems = 0;
-
         NodePtr front = nullptr;
         NodePtr rear = nullptr;
         int numItems = 0;
@@ -136,6 +133,8 @@ class Queue { // uses doubly linked list
                 NodePtr current = front;
                 searchResults *crest = nullptr, *conductor; //conductor will traverse like how a conductor moves between train carts, crest is the head/front of the list
                 int GotYa = 1; //just a counter if it got something
+                std::string lower_input;
+                int selection;
                 
                 while(true) { //input loop
                     std::cout << "Input patient name or ID: ";
@@ -146,7 +145,7 @@ class Queue { // uses doubly linked list
                         continue;
                     }
                     else {
-                        std::string lower_input = lowercase(input);
+                        lower_input = lowercase(input);
                         break;
                     }
                 }
@@ -160,7 +159,7 @@ class Queue { // uses doubly linked list
                         std::string lower_ID = lowercase(current->patientID);
                                 
                         if(lower_name.find(lower_input) != std::string::npos || lower_ID.find(lower_input) != std::string::npos) {
-                            if(GotYa == 1) {
+                            if (GotYa == 1) {
                                 crest = new searchResults;
                                 conductor = crest;
                                 conductor->foundNode = current;
@@ -194,21 +193,22 @@ class Queue { // uses doubly linked list
                             conductor = conductor->next;
                         }
                     
-                    int selection;
-                    while(true) {
-                        std::cout << "\nEnter a Number: ";
-                        std::cin >> selection;
-                        if(std::cin.fail() || selection >= GotYa) {
-                            std::cout << "Invalid Input!\n";
-                            std::cin.clear();
-                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                            continue;
-                        }
-                        else {
-                            conductor = crest;
-                            break;
+                        while(true) {
+                            std::cout << "\nEnter a Number: ";
+                            std::cin >> selection;
+                            if(std::cin.fail() || selection >= GotYa) {
+                                std::cout << "Invalid Input!\n";
+                                std::cin.clear();
+                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                continue;
+                            }
+                            else {
+                                conductor = crest;
+                                break;
+                            }
                         }
                     }
+                    
                     int choice;
                     while(conductor != nullptr) {
                         if(conductor->num == selection) {
@@ -259,7 +259,7 @@ class Queue { // uses doubly linked list
                 }
             } while(tolower(choice) == 'y');
         }
-
+        
         void show_current_day(int currDate[]) { // added this just in case
             std::cout << "Current simulated date: "
                     << currDate[0] << "/"
