@@ -43,8 +43,44 @@ class Queue { // uses doubly linked list
         }
 
         void update_node(searchResults *point) {
-            NodePtr current;
-            current = point->foundNode;
+            NodePtr current = point->foundNode;
+            
+            std::cout << "\n--- Editing Patient: " << current->patientName << " ---\n";
+            
+            std::string newName;
+            std::cout << "Enter New Name (Press enter to keep old one): ";
+            std::getline(std::cin, newName);
+            if(!newName.empty()) {
+                current->patientName = newName;
+            }
+            
+            std::string newDesc;
+            std::cout << "Enter new case description (or press Enter to keep current): ";
+            std::getline(std::cin, newDesc);
+            if (!newDesc.empty()) {
+                current->caseDesc = newDesc;
+            }
+            
+            int input;
+            while(true) {
+                std::cout << "Enter new priority [1-3] (or input a random number to keep old): ";
+                std::cin >> input;
+                if(std::cin.fail()) {
+                    std::cout << "Invalid Input!\n";
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    continue;
+                }
+                else if(input < 1 || input > 3) {
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    break;
+                }
+                else {
+                    current->priority = input;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    break;
+                }
+            }
         }
         
         void remove_node(searchResults *point) {
