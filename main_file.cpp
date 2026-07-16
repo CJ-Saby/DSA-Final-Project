@@ -55,6 +55,7 @@ class Queue { // uses doubly linked list
                 current->patientName = newName;
             }
 
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::string newDesc;
             std::cout << "Enter new case description (or press Enter to keep current): ";
             std::getline(std::cin, newDesc);
@@ -62,6 +63,7 @@ class Queue { // uses doubly linked list
                 current->caseDesc = newDesc;
             }
 
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             int input;
             while(true) {
                 std::cout << "Enter new priority [1-3] (or input a random number to keep old): ";
@@ -243,7 +245,7 @@ class Queue { // uses doubly linked list
                         }
                     
                         while(true) {
-                            std::cout << "\nEnter a Number: ";
+                            std::cout << "\nEnter the number of the patient from the search results: ";
                             std::cin >> selection;
                             if(std::cin.fail() || selection < 1 || selection >= GotYa) {
                                 std::cout << "Invalid Input!\n";
@@ -302,7 +304,7 @@ class Queue { // uses doubly linked list
                     }
                     
                     
-                    std::cout << "\nContinue(Enter y if yes, anything else if no): ";
+                    std::cout << "\nContinue searching? (Enter y if yes, anything else if no): ";
                     std::cin >> choice;
                         
                 }
