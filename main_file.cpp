@@ -334,15 +334,23 @@ class Queue { // uses doubly linked list
                     }
 
                     char choice;
+
+                    while (true) {
                     std::cout << "\nMark this patient as discharged? (Y/N): ";
                     std::cin >> choice;
-    
+
                     choice = std::tolower(static_cast<unsigned char>(choice));
-    
+
+                    if (choice == 'y' || choice == 'n') {
+                        break;
+                    }
+                        std::cout << "Invalid input. Please enter only Y or N.\n";
+                    }
+
                     if (choice == 'y') {
                         mark_patient_as_discharged(id, currDate);
                     }
-
+    
                     return;
                 }
 
