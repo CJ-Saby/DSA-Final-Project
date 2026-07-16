@@ -675,8 +675,58 @@ class Queue { // uses doubly linked list
 };
 
 int main() {
-
-    int currentDate[3] = {16, 7, 2026}; // starting simulation date: 16/07/2026 (tentative)
-
+    Queue Records;
+    int choice;
+    
+    Records.load_to_queue();
+    while(true) {
+        std::cout << "===============================================\n";
+        std::cout << "\t\tPatient Records\n";
+        std::cout << "===============================================\n";
+        std::cout << "[1] Add New Patient Record\n";
+        std::cout << "[2] View Current Patient Queue\n";
+        std::cout << "[3] Search Patient Database\n";
+        std::cout << "[4] View Discharged Patients History\n";
+        std::cout << "[5] Exit System\n";
+        std::cout << "-----------------------------------------------\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+        if(std::cin.fail()) {
+            std::cout << "Invalid Input!\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        else if(choice > 5 || choice < 1) {
+            std::cout << "Invalid Input!\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+        else {
+            switch(choice) {
+                case 1:
+                    std::cout << "------------------ADD PATIENT------------------\n";
+                    Records.add_record();
+		            Records.save_to_records();
+                    break;
+                case 2:
+                    Records.view_all();
+                    break;
+                case 3:
+                    std::cout << "\n----------------SEARCH PATIENT----------------\n";
+                    Records.search();
+		            Records.save_to_records();
+                    break;
+                case 4:
+                    Records.view_discharged_patients();
+                    break;
+                case 5:
+                    std::cout << "\nExiting clinic system. Goodbye!\n";
+		            Records.save_to_records();
+                    return 0;
+            }
+        }
+    }
     return 0;
 }
