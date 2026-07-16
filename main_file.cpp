@@ -713,6 +713,7 @@ int main() {
 					Records.save_to_records();
                     break;
                 case 2:
+					std::cout << "------------------CURRENT QUEUE------------------\n";
                     Records.view_all();
                     break;
                 case 3:
@@ -721,6 +722,7 @@ int main() {
 					Records.save_to_records();
                     break;
                 case 4:
+					std::cout << "------------------DISCHARGED PATIENTS------------------\n";
                     Records.view_discharged_patients();
                     break;
                 case 5:
