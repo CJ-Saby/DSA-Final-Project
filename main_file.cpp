@@ -15,7 +15,7 @@ class Queue { // uses doubly linked list
             std::string patientID; // contains a unique identifier for the patient case
             int priority; // legend: 1 = non emergency, 2 = emergency, 3 = highly urgent emergency
             int dateMade[3] = {0}, dateDischarged[3] = {0}; // initialize dates to 0 by default (legend of indices: 0 = Day, 1 = Month, 2 = Year)
-            patientCase* next, *prev;
+            patientCase* next = nullptr, *prev = nullptr;
             bool discharged = false;
         };
         
@@ -43,44 +43,8 @@ class Queue { // uses doubly linked list
         }
 
         void update_node(searchResults *point) {
-            NodePtr current = point->foundNode;
-            
-            std::cout << "\n--- Editing Patient: " << current->patientName << " ---\n";
-            
-            std::string newName;
-            std::cout << "Enter New Name (Press enter to keep old one): ";
-            std::getline(std::cin, newName);
-            if(!newName.empty()) {
-                current->patientName = newName;
-            }
-            
-            std::string newDesc;
-            std::cout << "Enter new case description (or press Enter to keep current): ";
-            std::getline(std::cin, newDesc);
-            if (!newDesc.empty()) {
-                current->caseDesc = newDesc;
-            }
-            
-            int input;
-            while(true) {
-                std::cout << "Enter new priority [1-3] (or input a random number to keep old): ";
-                std::cin >> input;
-                if(std::cin.fail()) {
-                    std::cout << "Invalid Input!\n";
-                    std::cin.clear();
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    continue;
-                }
-                else if(input < 1 || input > 3) {
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    break;
-                }
-                else {
-                    current->priority = input;
-                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    break;
-                }
-            }
+            NodePtr current;
+            current = point->foundNode;
         }
         
         void remove_node(searchResults *point) {
@@ -720,7 +684,16 @@ class Queue { // uses doubly linked list
                         currPatient->dateDischarged[2] = year;
                     } 
                     else if (line == "----------") {
-                        sort_node_in_queue(currPatient); // processes the node and puts it in the right order in the queue
+                        if (front == nullptr) { 
+                            front = currPatient;
+                            rear = currPatient;
+                        } else {
+                            currPatient->prev = rear;
+                            rear->next = currPatient;
+                            rear = currPatient;
+                            sort_node_in_queue(currPatient);
+                        }
+                        numItems++;
                         currPatient = new patientCase(); // creates a new node to hold all the data and to be added to the queue
                         priorityNum = 0;
                         day = 0;
@@ -730,7 +703,16 @@ class Queue { // uses doubly linked list
                 }
 
                 if (!currPatient->patientName.empty()) { // final check in the case that the reading loop ends and a patient record is still in the traversal node
-                    sort_node_in_queue(currPatient);
+                    if (front == nullptr) {
+                        front = currPatient;
+                        rear = currPatient;
+                    } else {
+                        currPatient->prev = rear;
+                        rear->next = currPatient;
+                        rear = currPatient;
+                        sort_node_in_queue(currPatient);
+                    }
+                    numItems++;
                 } else {
                     delete currPatient; // after reading, frees up the memory made from the temporary node used for traversal 
                 }
