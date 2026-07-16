@@ -4,6 +4,7 @@
 #include <string>
 #include <random>
 #include <cstdlib>
+#include <fstream>
 
 class Queue { // uses doubly linked list
     private:
