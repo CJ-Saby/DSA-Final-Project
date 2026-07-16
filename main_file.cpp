@@ -302,7 +302,7 @@ class Queue { // uses doubly linked list
             show_current_day(currDate);
         }
 
-        void view_patient_details(const std::string& id) {
+        void view_patient_details(const std::string& id, int currDate[]) {
 
             NodePtr traverse = front;
 
@@ -340,6 +340,23 @@ class Queue { // uses doubly linked list
 
                     } else {
                         std::cout << "Status: Not Discharged\n";
+                        char choice;
+
+                        while (true) {
+                        std::cout << "\nMark this patient as discharged? (Y/N): ";
+                        std::cin >> choice;
+
+                        choice = std::tolower(static_cast<unsigned char>(choice));
+
+                        if (choice == 'y' || choice == 'n') {
+                            break;
+                        }
+                            std::cout << "Invalid input. Please enter only Y or N.\n";
+                        }
+
+                        if (choice == 'y') {
+                            mark_patient_as_discharged(id, currDate);
+                        }
                     }
 
                     return;
@@ -492,7 +509,7 @@ class Queue { // uses doubly linked list
             numItems++; // increments the total items count
         }
 
-        void view_all() {
+        void view_all(int currDate[]) {
             if (front == nullptr) {
                 std::cout << "\n--- No patient records found. The queue is empty. ---\n";
                 return;
@@ -547,7 +564,7 @@ class Queue { // uses doubly linked list
                 std::cout << "Select patient no: " ;
                         if (std::cin >> targetPos) {
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        patient_position(targetPos);
+                        patient_position(targetPos, currDate);
                     }
                     break;
 
@@ -580,7 +597,7 @@ class Queue { // uses doubly linked list
             inFile.close();
         }
 
-        void patient_position(int position) {
+        void patient_position(int position, int currDate[]) {
             NodePtr temp = front;
             int count = 1;
 
@@ -594,7 +611,7 @@ class Queue { // uses doubly linked list
                 return;
             }
 
-            view_patient_details(temp->patientID);
+            view_patient_details(temp->patientID, currDate);
         }
 
         void save_to_records() { // saves the current main queue to the records text file
@@ -728,7 +745,7 @@ int main() {
                     break;
                 case 2:
 					std::cout << "------------------CURRENT QUEUE------------------\n";
-                    Records.view_all();
+                    Records.view_all(currentDate);
                     break;
                 case 3:
                     std::cout << "\n----------------SEARCH PATIENT----------------\n";
