@@ -565,8 +565,9 @@ class Queue { // uses doubly linked list
                         if (std::cin >> targetPos) {
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         patient_position(targetPos, currDate);
+							break;
                     }
-                    break;
+                    
 
             } else if (choice == 2){   
                 break;
@@ -765,6 +766,7 @@ int main() {
 				case 6:
 					std::cout << "\nExiting clinic system. Goodbye!\n";
 					Records.save_to_records();
+					std::exit(1);
                     return 0;
             }
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
