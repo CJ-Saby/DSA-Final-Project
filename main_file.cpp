@@ -70,6 +70,8 @@ class Queue { // uses doubly linked list
                 current->prev->next = current->next;
                 delete current;
                 numItems--;
+            }
+        }
 
         ~Queue() {
             NodePtr current = front;
