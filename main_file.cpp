@@ -599,20 +599,13 @@ class Queue { // uses doubly linked list
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             if (choice == 1){
-				while(true){
                 int targetPos; // selecting the desired patient through its number in the list
                 std::cout << "Select patient no: " ;
                         if (std::cin >> targetPos) {
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         patient_position(targetPos, currDate);
 							break;
-                    }else {
-                        std::cout << "Invalid input. Please enter a number.\n";
-                        std::cin.clear();
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     }
-				}
-
             } else if (choice == 2){   
                 break;
             } 
