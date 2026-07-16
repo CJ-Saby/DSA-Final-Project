@@ -55,7 +55,7 @@ class Queue { // uses doubly linked list
                 numItems--;
             }
             else if(current->prev != nullptr && current->next == nullptr) {
-                front = front->next;
+                current->prev->next = nullptr;
                 delete current;
                 numItems--;
             }
@@ -202,7 +202,7 @@ class Queue { // uses doubly linked list
                         while(true) {
                             std::cout << "\nEnter a Number: ";
                             std::cin >> selection;
-                            if(std::cin.fail() || selection >= GotYa) {
+                            if(std::cin.fail() || selection < 1 || selection >= GotYa) {
                                 std::cout << "Invalid Input!\n";
                                 std::cin.clear();
                                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
