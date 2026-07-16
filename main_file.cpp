@@ -766,7 +766,6 @@ int main() {
 				case 6:
 					std::cout << "\nExiting clinic system. Goodbye!\n";
 					Records.save_to_records();
-					std::exit(1);
                     return 0;
             }
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
