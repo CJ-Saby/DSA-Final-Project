@@ -81,6 +81,12 @@ class Queue { // uses doubly linked list
                 delete current;
                 current = nextNode;
             }
+            current = dischargedFront;
+            while (current != nullptr) {
+                NodePtr nextNode = current->next;
+                delete current;
+                current = nextNode;
+            }
         }
 
         std::string id_random() {
