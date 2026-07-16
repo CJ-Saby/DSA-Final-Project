@@ -407,10 +407,10 @@ class Queue { // uses doubly linked list
         }
 
         void sort_node_in_queue(NodePtr caseNode) { 
-            if (caseNode->prev == nullptr) { // is a check in case the case node is at the front
+            if (caseNode == nullptr || caseNode->prev == nullptr) { // is a check in case the case node is at the front or if queue is empty
                 return;
             } 
-            while (caseNode->prev->priority < caseNode->priority) { // is true when the node to the left has a priority less than the current case node
+            while (caseNode->prev != nullptr && caseNode->prev->priority < caseNode->priority) { // is true when the node to the left has a priority less than the current case node
                 NodePtr prevNode = caseNode->prev; // is the node to the left of the current case node
                 NodePtr prevprevNode = prevNode->prev; // stores the node before the node to the left of the current case node
                 NodePtr nextNode = caseNode->next; // stores the node currently after the case node (to the right of case node)
@@ -419,15 +419,22 @@ class Queue { // uses doubly linked list
                     caseNode->next = prevNode; // turns the node formerly to the left to now the node to the right of case node
                     caseNode->prev = nullptr; // because case node is now the front, its left pointer is now null
                     prevNode->prev = caseNode; // completes the link of case node and the node formerly to the left which is now the right node
-                    if (nextNode != nullptr) {nextNode->prev = prevNode;} // links the node formerly the left node to the node formerly the right node
+                    if (nextNode != nullptr) { // links the node formerly the left node to the node formerly the right node
+                        nextNode->prev = prevNode;
+                    } else {
+                        rear = prevNode;
+                    }
                     front = caseNode; // sets the current case node as the new front 
                 } else {
                     prevprevNode->next = caseNode; // links the node before the previous node to the case node
-                    prevNode->next = caseNode->next; // links the previous node's next pointer to the node currently after case node
-                    if (prevNode->next == nullptr) {rear = prevNode;} // happens if the swap occurs between the second to the last and the last nodes
+                    prevNode->next = nextNode; // links the previous node's next pointer to the node currently after case node
                     caseNode->next = prevNode; // switches the node after case node into the former previous node
                     prevNode->prev = caseNode; // completes the switch
-                    if (nextNode != nullptr) {nextNode->prev = prevNode;} // links the node formerly after case node to the new next node ONLY if next node exists
+                    if (nextNode != nullptr) { // links the node formerly after case node to the new next node ONLY if next node exists
+                        nextNode->prev = prevNode;
+                    } else {
+                        rear = prevNode;
+                    }
                     caseNode->prev = prevprevNode; // links the case node the the previous node of the formerly previous node
                 }
             } 
