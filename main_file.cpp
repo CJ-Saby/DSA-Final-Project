@@ -293,7 +293,7 @@ class Queue { // uses doubly linked list
             show_current_day(currDate);
         }
 
-        void view_patient_details(const std::string& id) {
+        void view_patient_details(const std::string& id, int currDate[]) {
 
             NodePtr traverse = front;
 
@@ -331,6 +331,16 @@ class Queue { // uses doubly linked list
 
                     } else {
                         std::cout << "Status: Not Discharged\n";
+                    }
+
+                    char choice;
+                    std::cout << "\nMark this patient as discharged? (Y/N): ";
+                    std::cin >> choice;
+    
+                    choice = std::tolower(static_cast<unsigned char>(choice));
+    
+                    if (choice == 'y') {
+                        mark_patient_as_discharged(id, currDate);
                     }
 
                     return;
