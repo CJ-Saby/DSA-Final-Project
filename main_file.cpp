@@ -31,6 +31,8 @@ class Queue { // uses doubly linked list
         int numItems = 0;
 
     public:
+
+		bool found;
     
         std::string lowercase(std::string initial) { // turns a string into lowercase
             std::string lower = initial;
@@ -158,8 +160,10 @@ class Queue { // uses doubly linked list
                 
                 if(current == nullptr) {
                     std::cout << "The Queue is Empty\n";
+					found = false;
                 }
                 else {
+					found = true;
                     while(current != nullptr) { //searching and recording each found node
                         std::string lower_name = lowercase(current->patientName);
                         std::string lower_ID = lowercase(current->patientID);
@@ -189,6 +193,7 @@ class Queue { // uses doubly linked list
                             
                     if(crest == nullptr) {
                         std::cout << "No matches found\n";
+						found = false;
                     }
                     else {
                         conductor = crest;
@@ -706,6 +711,7 @@ int main() {
             continue;
         }
         else {
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             switch(choice) {
                 case 1:
                     std::cout << "------------------ADD PATIENT------------------\n";
@@ -719,7 +725,9 @@ int main() {
                 case 3:
                     std::cout << "\n----------------SEARCH PATIENT----------------\n";
                     Records.search();
-					Records.save_to_records();
+					if(Records.found) {
+						Records.save_to_records();
+					}
                     break;
                 case 4:
 					std::cout << "------------------DISCHARGED PATIENTS------------------\n";
@@ -734,6 +742,7 @@ int main() {
 					Records.save_to_records();
                     return 0;
             }
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
     return 0;
