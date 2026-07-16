@@ -5,6 +5,7 @@
 #include <random>
 #include <cstdlib>
 #include <fstream>
+#include <sstream>
 
 class Queue { // uses doubly linked list
     private:
@@ -24,6 +25,13 @@ class Queue { // uses doubly linked list
             int num;
         };
         
+        typedef patientCase* NodePtr;
+        NodePtr front = nullptr;
+        NodePtr rear = nullptr;
+        int numItems = 0;
+
+    public:
+    
         std::string lowercase(std::string initial) { // turns a string into lowercase
             std::string lower = initial;
             for(int a = 0;a < lower.length();a++) {
@@ -31,14 +39,7 @@ class Queue { // uses doubly linked list
             }
             return lower;
         }
-        
-        typedef patientCase* NodePtr;
-        NodePtr front = nullptr;
-        NodePtr rear = nullptr;
-        int numItems = 0;
 
-    public:
-        
         void update_node(searchResults *point) {
             NodePtr current;
             current = point->foundNode;
@@ -71,19 +72,21 @@ class Queue { // uses doubly linked list
             }
         }
 
-        ~Queue() {
+        void clear_queue() {
             NodePtr current = front;
             while (current != nullptr) {
                 NodePtr nextNode = current->next;
                 delete current;
                 current = nextNode;
             }
-            current = dischargedFront;
-            while (current != nullptr) {
-                NodePtr nextNode = current->next;
-                delete current;
-                current = nextNode;
-            }
+            front = nullptr;
+            rear = nullptr;
+            numItems = 0;
+            std::cout << "Queue successfully cleared." << std::endl;
+        }
+
+        ~Queue() {
+            clear_queue();
         }
 
         std::string id_random() {
@@ -293,7 +296,7 @@ class Queue { // uses doubly linked list
             show_current_day(currDate);
         }
 
-        void view_patient_details(const std::string& id, int currDate[]) {
+        void view_patient_details(const std::string& id) {
 
             NodePtr traverse = front;
 
@@ -333,24 +336,6 @@ class Queue { // uses doubly linked list
                         std::cout << "Status: Not Discharged\n";
                     }
 
-                    char choice;
-
-                    while (true) {
-                    std::cout << "\nMark this patient as discharged? (Y/N): ";
-                    std::cin >> choice;
-
-                    choice = std::tolower(static_cast<unsigned char>(choice));
-
-                    if (choice == 'y' || choice == 'n') {
-                        break;
-                    }
-                        std::cout << "Invalid input. Please enter only Y or N.\n";
-                    }
-
-                    if (choice == 'y') {
-                        mark_patient_as_discharged(id, currDate);
-                    }
-    
                     return;
                 }
 
@@ -559,9 +544,10 @@ class Queue { // uses doubly linked list
                 else {
                 std::cout << "Please select a valid option.\n";
             }
+            }
         }
-        }
-       void view_discharged_patients() {
+
+        void view_discharged_patients() {
             std::ifstream inFile("discharged_history.txt");
             
             // If no files yet, then nobody has been discharged
@@ -597,57 +583,100 @@ class Queue { // uses doubly linked list
 
             view_patient_details(temp->patientID);
         }
+
+        void save_to_records() { // saves the current main queue to the records text file
+            std::ofstream records("hospital_record.txt"); // file stream for accessing hospital record file
+            if (records.is_open()) {
+                NodePtr traverse = front;
+                while (traverse != nullptr) { // the character following an * is an identifier for what type of information a certain line will hold. Used during text file reading
+                    records << "n*" << traverse->patientName << '\n';
+                    std::string safeDesc = traverse->caseDesc; // used to ensure there are no newlines in the middle of the description to be transferred over to the text file. 
+                    for (char& c : safeDesc) {
+                        if (c == '\n') {
+                            c = ' ';
+                        }
+                    }
+                    records << "d*" << safeDesc << '\n';
+                    records << "i*" << traverse->patientID << '\n';
+                    records << "p*" << traverse->priority << '\n';
+                    records << "#*" << traverse->dateMade[0] << ' ' << traverse->dateMade[1] << ' ' << traverse->dateMade[2] << '\n';
+                    records << "$*" << traverse->dateDischarged[0] << ' ' << traverse->dateDischarged[1] << ' ' << traverse->dateDischarged[2] << '\n';
+                    records << "----------\n"; // separator for each record 
+
+                    traverse = traverse->next; // for iterating through queue
+                }
+                std::cout << "Successfully saved queue to record text file." << std::endl;
+            } else {
+                std::cout << "Records failed to open." << std::endl;
+            }
+        }
+
+        void load_to_queue() { // reads records text file and puts it into the priority queue
+            std::ifstream records("hospital_record.txt"); // file stream for accessing hospital record file
+            if (records.is_open()) { 
+                std::string line;
+                int priorityNum = 0, day = 0, month = 0, year = 0; // intialize variables with 0 for safety
+                NodePtr currPatient = new patientCase();
+                clear_queue(); // ensures that the current queue is empty before attempting to load record text file contents
+
+                while (std::getline(records, line)) { // iterates through each line in the text file
+                    if (line.length() < 2) {continue;} // safety in case a gap or insufficent character lne is present in the record
+
+                    if (line[0] == 'n' && line[1] == '*') { // check if the line is a patient name line
+                        currPatient->patientName = line.substr(2); // substr(2) ignores the previously added tags on each line
+                    } 
+                    else if (line[0] == 'd' && line[1] == '*') { // check if the line is a case description line
+                        currPatient->caseDesc = line.substr(2);
+                    } 
+                    else if (line[0] == 'i' && line[1] == '*') { // check if the line is a patient id line
+                        currPatient->patientID = line.substr(2);
+                    } 
+                    else if (line[0] == 'p' && line[1] == '*') { // check if the line is a priority line
+                        try {
+                            priorityNum = std::stoi(line.substr(2));
+                            currPatient->priority = priorityNum;
+                        } catch (const std::exception& e) {
+                            currPatient->priority = 0;
+                            std::cout << "Error: Priorty was corrupted in the record text file. Setting the current patient's priority to 0" << std::endl;
+                        }
+                    } 
+                    else if (line[0] == '#' && line[1] == '*') { // check if the line is a date of when the case was made
+                        std::stringstream (line.substr(2)) >> day >> month >> year; // used to parse through the tagged date string
+                        currPatient->dateMade[0] = day;
+                        currPatient->dateMade[1] = month;
+                        currPatient->dateMade[2] = year;
+                    } 
+                    else if (line[0] == '$' && line[1] == '*') { // check if the line is a date of when the case was discharged
+                        std::stringstream (line.substr(2)) >> day >> month >> year; // used to parse through the tagged date string
+                        currPatient->dateDischarged[0] = day;
+                        currPatient->dateDischarged[1] = month;
+                        currPatient->dateDischarged[2] = year;
+                    } 
+                    else if (line == "----------") {
+                        sort_node_in_queue(currPatient); // processes the node and puts it in the right order in the queue
+                        currPatient = new patientCase(); // creates a new node to hold all the data and to be added to the queue
+                        priorityNum = 0;
+                        day = 0;
+                        month = 0;
+                        year = 0;
+                    }
+                }
+
+                if (!currPatient->patientName.empty()) { // final check in the case that the reading loop ends and a patient record is still in the traversal node
+                    sort_node_in_queue(currPatient);
+                } else {
+                    delete currPatient; // after reading, frees up the memory made from the temporary node used for traversal 
+                }
+                std::cout << "Successfully loaded record text file into queue." << std::endl;
+            } else {
+                std::cout << "Records failed to open." << std::endl;
+            }
+        }
 };
 
 int main() {
-    Queue Records;
-    int choice;
-    
-    while(true) {
-        std::cout << "===============================================\n";
-        std::cout << "\t\tPatient Records\n";
-        std::cout << "===============================================\n";
-        std::cout << "[1] Add New Patient Record\n";
-        std::cout << "[2] View Current Patient Queue\n";
-        std::cout << "[3] Search Patient Database\n";
-        std::cout << "[4] View Discharged Patients History\n";
-        std::cout << "[5] Exit System\n";
-        std::cout << "-----------------------------------------------\n";
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
-        if(std::cin.fail()) {
-            std::cout << "Invalid Input!\n";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-        else if(choice > 5 || choice < 1) {
-            std::cout << "Invalid Input!\n";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            continue;
-        }
-        else {
-            switch(choice) {
-                case 1:
-                    std::cout << "------------------ADD PATIENT------------------\n";
-                    Records.add_record();
-                    break;
-                case 2:
-                    Records.view_all();
-                    break;
-                case 3:
-                    std::cout << "\n----------------SEARCH PATIENT----------------\n";
-                    Records.search();
-                    break;
-                case 4:
-                    Records.view_discharged_patients();
-                    break;
-                case 5:
-                    std::cout << "\nExiting clinic system. Goodbye!\n";
-                    return 0;
-            }
-        }
-    }
+
+    int currentDate[3] = {16, 7, 2026}; // starting simulation date: 16/07/2026 (tentative)
+
     return 0;
 }
