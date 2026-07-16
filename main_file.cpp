@@ -135,6 +135,7 @@ class Queue { // uses doubly linked list
         
         void search() { //searches all similar nodes
             char choice;
+			found = false;
             
             do {
                 std::string input;
