@@ -677,7 +677,8 @@ class Queue { // uses doubly linked list
 int main() {
     Queue Records;
     int choice;
-    
+    int currentDate[3] = {16, 7, 2026};
+	
 	Records.load_to_queue();
     while(true) {
         std::cout << "===============================================\n";
@@ -687,7 +688,8 @@ int main() {
         std::cout << "[2] View Current Patient Queue\n";
         std::cout << "[3] Search Patient Database\n";
         std::cout << "[4] View Discharged Patients History\n";
-        std::cout << "[5] Exit System\n";
+		std::cout << "[5] Advance to Next Day\n";
+        std::cout << "[6] Exit System\n";
         std::cout << "-----------------------------------------------\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
@@ -707,7 +709,7 @@ int main() {
             switch(choice) {
                 case 1:
                     std::cout << "------------------ADD PATIENT------------------\n";
-					Records.add_record();
+					Records.add_record(currentDate);
 					Records.save_to_records();
                     break;
                 case 2:
@@ -722,7 +724,11 @@ int main() {
                     Records.view_discharged_patients();
                     break;
                 case 5:
-                    std::cout << "\nExiting clinic system. Goodbye!\n";
+                    std::cout << "\n----------------ADVANCING TIME----------------\n";
+					Records.move_one_day(currentDate);
+                	break;
+				case 6:
+					std::cout << "\nExiting clinic system. Goodbye!\n";
 					Records.save_to_records();
                     return 0;
             }
