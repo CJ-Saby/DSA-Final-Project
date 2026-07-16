@@ -32,7 +32,7 @@ class Queue { // uses doubly linked list
 
     public:
 
-		bool found;
+		bool found = false;
     
         std::string lowercase(std::string initial) { // turns a string into lowercase
             std::string lower = initial;
